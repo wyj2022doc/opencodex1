@@ -1,0 +1,20 @@
+{
+  "generate": {
+    "n_samples": 120,
+    "noise_scale": 0.05,
+    "rules": [
+      { "name": "feature_sum", "expression": "feature1 + feature2" }
+    ]
+  },
+  "steps": [
+    { "name": "fill_missing", "step_type": "fillna_mean", "params": {} },
+    { "name": "scale", "step_type": "standardize", "params": { "columns": ["feature1", "feature2"] } },
+    { "name": "anomaly", "step_type": "isolation_forest", "params": { "columns": ["feature1", "feature2"], "contamination": 0.08 } },
+    { "name": "predict", "step_type": "linear_regression", "params": { "features": ["feature1", "feature2"], "target": "target" } }
+  ],
+  "visualization": {
+    "histogram": { "column": "prediction", "output": "outputs/pred_hist.png" },
+    "scatter": { "x": "feature1", "y": "prediction", "output": "outputs/pred_scatter.png" }
+  },
+  "llm_model": "custom-llm"
+}
